@@ -32,6 +32,10 @@ export class QueryString {
   private queryMap = new Map<string, string>();
 
   constructor(httpQueryData: string) {
+    if (!httpQueryData) {
+      return;
+    }
+
     const querySplitData = httpQueryData.split('&');
     for (const query of querySplitData) {
       const [key, value] = query.split('=');
