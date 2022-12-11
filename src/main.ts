@@ -1,30 +1,35 @@
 import { HttpRequest } from './http/HttpRequest';
 import { createServer } from 'net';
-import { Calculator, PositiveNum } from './Calculator';
+import { HttpResponse } from './http/HttpResponse';
+import { calculateHandler } from './handler/calculate.handler';
+import cluster from 'cluster';
+import { cpus } from 'os';
+import { v4 as uuidv4 } from 'uuid';
 
-const server = createServer((socket) => {
-  socket.on('data', (request) => {
-    const httpRequest = new HttpRequest(request);
-    let content = '';
-    if (httpRequest.isGET && httpRequest.matchPath('/calculate')) {
-      const queryString = httpRequest.getQueryString();
-      const operand1 = parseInt(queryString.getValue('operand1') ?? '0', 10);
-      const operand2 = parseInt(queryString.getValue('operand2') ?? '0', 10);
-      const operator = Calculator.validateOp(queryString.getValue('operator'));
-      if (operator) {
-        content = Calculator.calculate(new PositiveNum(operand1), operator, new PositiveNum(operand2)).toString();
+if (cluster.isPrimary) {
+  const availableCpus = cpus();
+  console.log(`Clustering to ${availableCpus.length} process`);
+  availableCpus.forEach(() => cluster.fork());
+} else {
+  const { pid } = process;
+  const server = createServer((socket) => {
+    socket.setTimeout(500);
+    socket.on('data', (request) => {
+      const req = new HttpRequest(request);
+      const res = new HttpResponse(socket);
+      if (req.isGET && req.matchPath('/calculate')) {
+        return calculateHandler(req, res);
+      } else {
+        return res.send('hello world');
       }
-    }
-    socket.write(Buffer.from(`HTTP/1.1 200 OK\r\n`));
-    socket.write(Buffer.from(`Content-Type: text/plain\r\n`));
-    socket.write(Buffer.from(`Content-Length: ${content.length}\r\n`));
-    socket.write(Buffer.from(`\r\n`));
-    socket.write(content);
-    socket.write(Buffer.from(`\r\n`));
-    socket.end();
+    });
+    socket.on('error', (err) => {
+      console.log(err);
+      console.log('error 발생');
+    });
   });
-});
 
-server.listen(8080, () => {
-  console.log('server open');
-});
+  server.listen(8080, () => {
+    console.log(`server open ${pid}`);
+  });
+}
