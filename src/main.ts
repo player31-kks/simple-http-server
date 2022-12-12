@@ -4,7 +4,6 @@ import { HttpResponse } from './http/HttpResponse';
 import { calculateHandler } from './handler/calculate.handler';
 import cluster from 'cluster';
 import { cpus } from 'os';
-import { v4 as uuidv4 } from 'uuid';
 
 if (cluster.isPrimary) {
   const availableCpus = cpus();

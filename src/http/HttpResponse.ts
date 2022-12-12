@@ -1,6 +1,4 @@
-import { Mutex } from 'async-mutex';
 import { Writable } from 'stream';
-import { v4 as uuidv4 } from 'uuid';
 
 export class HttpResponse {
   private code: number = 200;
