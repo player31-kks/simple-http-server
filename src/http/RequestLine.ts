@@ -35,7 +35,9 @@ export class QueryString {
     if (!httpQueryData) {
       return;
     }
-
+    if (httpQueryData.includes('?')) {
+      httpQueryData = httpQueryData.slice(httpQueryData.indexOf('?') + 1);
+    }
     const querySplitData = httpQueryData.split('&');
     for (const query of querySplitData) {
       const [key, value] = query.split('=');
