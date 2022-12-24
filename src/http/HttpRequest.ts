@@ -6,8 +6,8 @@ import { RequestLine } from './RequestLine';
 
 export class HttpRequest {
   private requestLine: RequestLine;
-  constructor(data: Buffer) {
-    const request = data.toString().split('\n');
+  constructor(res: string) {
+    const request = res.split('\r\n');
     this.requestLine = new RequestLine(request[0]);
   }
 
