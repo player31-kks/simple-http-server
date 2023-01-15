@@ -19,3 +19,7 @@ phases:
         commands:
             - echo "🚚 Performing post-build packing and operations..."
             - echo "✅ Post build successful"
+artifacts:
+  files:
+    - '**/*'
+  name: output
