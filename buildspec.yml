@@ -19,4 +19,3 @@ phases:
         commands:
             - echo "🚚 Performing post-build packing and operations..."
             - echo "✅ Post build successful"
-            - aws deploy push --application-name practice-code-deploy --s3-location s3://deploy-nodejs-deployment-revision/deploy/source.zip --ignore-hidden-files --source .
