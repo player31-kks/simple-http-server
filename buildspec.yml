@@ -1,0 +1,26 @@
+version: 0.2
+
+phases: 
+    install:
+        runtime-versions:
+            nodejs: 18
+        commands:
+            - yarn install
+            - echo "✅ Packages installed successfully."
+    pre_build:
+        commands: 
+            - echo "⚙️ Testing..."
+            - echo "✅ Tests passed successfully."
+    build:
+        commands:
+            - yarn build
+            - echo "✅ Build passed successfully."
+    post_build:
+        commands:
+            - echo "🚚 Performing post-build packing and operations..."
+            - aws deploy push \
+                  --application-name practice-code-deploy \
+                  --s3-location s3://deploy-nodejs-deployment-revision/deploy/source.zip \
+                  --ignore-hidden-files \
+                  --source .
+            - echo "✅ Post build successful"
