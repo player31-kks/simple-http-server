@@ -1,0 +1,5 @@
+  - aws deploy push \
+                  --application-name practice-code-deploy \
+                  --s3-location s3://deploy-nodejs-deployment-revision/deploy/source.zip \
+                  --ignore-hidden-files \
+                  --source .

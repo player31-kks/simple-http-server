@@ -18,9 +18,7 @@ phases:
     post_build:
         commands:
             - echo "🚚 Performing post-build packing and operations..."
-            - aws deploy push \
-                  --application-name practice-code-deploy \
-                  --s3-location s3://deploy-nodejs-deployment-revision/deploy/source.zip \
-                  --ignore-hidden-files \
-                  --source .
             - echo "✅ Post build successful"
+artifacts:
+  files:
+    - output/**/*
